@@ -68,6 +68,13 @@ namespace Contoso.Events.ViewModels
 
         private void GenerateSignInSheetTableStorage(EventsContext context, Event eventItem, string message)
         {
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(tableStorageConnectionString);
+            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
+            CloudQueue queue = queueClient.GetQueueReference(signInQueueName);
+            queue.CreateIfNotExists();
+            CloudQueueMessage queueMessage = new CloudQueueMessage(message);
+            queue.AddMessage(queueMessage);
+
             eventItem.SignInDocumentUrl = PROCESSING_URI;
 
             context.SaveChanges();
