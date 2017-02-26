@@ -45,8 +45,8 @@ namespace Contoso.Events.ViewModels
                         MessageType = QueueMessageType.SignIn
                     };
                     string messageString = JsonConvert.SerializeObject(message);
-					
-                    GenerateSignInSheetTableStorage(context, eventItem, messageString);
+
+                    GenerateSignInSheetServiceBus(context, eventItem, message);
                 }
             }
         }
@@ -57,6 +57,10 @@ namespace Contoso.Events.ViewModels
 
         private void GenerateSignInSheetServiceBus(EventsContext context, Event eventItem, QueueMessage message)
         {
+            QueueClient client = QueueClient.CreateFromConnectionString(serviceBusConnectionString, signInQueueName);
+            BrokeredMessage queueMessage = new BrokeredMessage(message);
+            client.Send(queueMessage);
+
             eventItem.SignInDocumentUrl = PROCESSING_URI;
 
             context.SaveChanges();

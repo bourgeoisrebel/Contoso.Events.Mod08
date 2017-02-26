@@ -11,7 +11,9 @@ namespace Contoso.Events.Worker
     {
         static void Main()
         {
-            var host = new JobHost();
+            JobHostConfiguration config = new JobHostConfiguration();
+            config.UseServiceBus();
+            var host = new JobHost(config);
             // The following code ensures that the WebJob will be running continuously
             host.RunAndBlock();
         }

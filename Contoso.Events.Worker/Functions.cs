@@ -17,7 +17,7 @@ namespace Contoso.Events.Worker
         private static readonly TableStorageHelper _tableHelper = new TableStorageHelper();
         private static readonly IQueueHelper<CloudQueueMessage> _queueHelper = new TableStorageQueueHelper();
 
-        public static void ProcessQueueMessage([QueueTrigger("signin")] QueueMessage message, TextWriter log)
+        public static void ProcessQueueMessage([ServiceBusTrigger("signin")] QueueMessage message, TextWriter log)
         {
             HandleMessage(message);
         }
